@@ -24,6 +24,22 @@ menu = {
 
 }
 
+# Upsize Options Available
+sizes = {
+    1: {"name": "Small", "extra": 0.00},
+    2: {"name": "Medium", "extra": 0.75},
+    3: {"name": "Large", "extra": 1.00},
+}
+
+# Additional Flavors
+flavors = {
+    1: {"name": "No Flavor", "extra": 0.00},
+    2: {"name": "French Vanilla", "extra": 0.25},
+    3: {"name": "Peppermint Mocha", "extra": 0.25},
+    4: {"name": "Pumpkin Spice", "extra": 0.25},
+    5: {"name": "Gingerbread", "extra": 0.25},
+}
+
 def place_order():
     print("Ordering coming soon.")
 

@@ -77,6 +77,13 @@ def show_menu():
 
 def place_order():
     show_menu()
+    drink_number = get_valid_choice(menu, "\nEnter item number: ")
+
+    if not menu[drink_number]["in_stock"]:
+        print("Sorry, this item is currently unavailable.")
+        return
+
+    print(f"You chose: {menu[drink_number]['name']}")
 
 
 def staff_sign_in():

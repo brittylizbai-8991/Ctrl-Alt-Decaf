@@ -85,6 +85,13 @@ def place_order():
 
     print(f"You chose: {menu[drink_number]['name']}")
 
+    print("\nSizes:")
+    for number, size in sizes.items():
+        print(f"{number}. {size['name']} (+${size['extra']:.2f})")
+    size_number = get_valid_choice(sizes, "Choose a size: ")
+
+    final_price = menu[drink_number]["price"] + sizes[size_number]["extra"]
+    print(f"{menu[drink_number]['name']} ({sizes[size_number]['name']}): ${final_price:.2f}")
 
 def staff_sign_in():
     print("Staff sign-in coming soon.")

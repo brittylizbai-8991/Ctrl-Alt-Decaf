@@ -39,6 +39,21 @@ flavors = {
     5: {"name": "Gingerbread", "extra": 0.25},
 }
 
+# Milk Options
+milks = {
+    1: {"name": "Whole Milk", "extra": 0.00},
+    2: {"name": "Oat Milk", "extra": 0.25},
+    3: {"name": "Almond Milk", "extra": 0.25},
+}
+
+# Toppings
+toppings = {
+    1: {"name": "No Toppings", "extra": 0.00},
+    2: {"name": "Whipped Cream", "extra": 0.25},
+    3: {"name": "Caramel Drizzle", "extra": 0.25},
+    4: {"name": "Chocolate Drizzle", "extra": 0.25},
+}
+
 def place_order():
     print("Ordering coming soon.")
 

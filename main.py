@@ -61,8 +61,12 @@ def show_menu():
             print(f"\n--- {item['category']} ---")
             last_category = item["category"]
 
-        status = "" if item["in_stock"] else "(OUT OF STOCK)"
+        status = "" if item["in_stock"] else " (OUT OF STOCK)"
         print(f"{number}. {item['name']} - ${item['price']:.2f}{status}")
+
+    print("\nPrices shown are for Small. Medium +$0.75. Large +$1.00.")
+    print("Flavors +$0.25. Oat/Almond milk +$0.25. Toppings +$0.25.")
+
 
 def place_order():
     show_menu()

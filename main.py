@@ -54,8 +54,19 @@ toppings = {
     4: {"name": "Chocolate Drizzle", "extra": 0.25},
 }
 
+def show_menu():
+    last_category = ""
+    for number, item in menu.items():
+        if item["category"] != last_category:
+            print(f"\n--- {item['category']} ---")
+            last_category = item["category"]
+
+        status = "" if item["in_stock"] else "(OUT OF STOCK)"
+        print(f"{number}. {item['name']} - ${item['price']:.2f}{status}")
+
 def place_order():
-    print("Ordering coming soon.")
+    show_menu()
+
 
 def staff_sign_in():
     print("Staff sign-in coming soon.")

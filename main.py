@@ -54,6 +54,13 @@ toppings = {
     4: {"name": "Chocolate Drizzle", "extra": 0.25},
 }
 
+def get_valid_choice(options, prompt):
+    while True:
+        raw = input(prompt).strip()
+        if raw.isdigit() and int(raw) in options:
+            return int(raw)
+        print("Invalid selection, please try again.")
+
 def show_menu():
     last_category = ""
     for number, item in menu.items():

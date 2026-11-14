@@ -54,12 +54,22 @@ toppings = {
     4: {"name": "Chocolate Drizzle", "extra": 0.25},
 }
 
+# Confirmed orders are stored here
+orders = []
+
 def get_valid_choice(options, prompt):
     while True:
         raw = input(prompt).strip()
         if raw.isdigit() and int(raw) in options:
             return int(raw)
         print("Invalid selection, please try again.")
+
+def get_yes_no(prompt):
+    while True:
+        answer = input(prompt).strip().lower()
+        if answer in ("y", "n"):
+            return answer == "y"
+        print("Please enter y or n.")
 
 def show_menu():
     last_category = ""
@@ -128,7 +138,30 @@ def place_order():
                    + milk_extra
                    + flavor_extra
                    + topping_extra)
-    print(f"\n{menu[drink_number]['name']} ({sizes[size_number]['name']}, {milk_name}, {flavor_name}, {topping_name}): ${final_price:.2f}")
+
+    print("\n--- Order Summary ---")
+    print(f"Drink:   {menu[drink_number]['name']}")
+    print(f"Size:    {sizes[size_number]['name']}")
+    print(f"Milk:    {milk_name}")
+    print(f"Flavor:  {flavor_name}")
+    print(f"Topping: {topping_name}")
+    print(f"Total:   ${final_price:.2f}")
+
+    if get_yes_no("\nConfirm order? (y/n):  "):
+        order = {
+            "number": len(orders) + 1,
+            "drink": menu[drink_number]["name"],
+            "size": sizes[size_number]["name"],
+            "milk": milk_name,
+            "flavor": flavor_name,
+            "topping": topping_name,
+            "total": final_price,
+        }
+        orders.append(order)
+        print(f"\nOrder #{order['number']} placed! Pay in person at pick-up.")
+    else:
+        print("\nOrder cancelled.")
+
 
 def staff_sign_in():
     print("Staff sign-in coming soon.")

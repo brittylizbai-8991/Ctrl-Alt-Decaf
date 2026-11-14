@@ -101,8 +101,22 @@ def place_order():
         milk_name = "None"
         milk_extra = 0.00
 
-    final_price = (menu[drink_number]["price"] + sizes[size_number]["extra"] + milk_extra)
-    print(f"\n{menu[drink_number]['name']} ({sizes[size_number]['name']}, {milk_name}): ${final_price:.2f}")
+    if menu[drink_number]["flavorable"]:
+        print("\nFlavors:")
+        for number, flavor in flavors.items():
+            print(f"{number}. {flavor['name']} (+${flavor['extra']:.2f})")
+        flavor_number = get_valid_choice(flavors, "Choose a flavor: ")
+        flavor_name = flavors[flavor_number]["name"]
+        flavor_extra = flavors[flavor_number]["extra"]
+    else:
+        flavor_name = "None"
+        flavor_extra = 0.00
+
+    final_price = (menu[drink_number]["price"]
+                   + sizes[size_number]["extra"]
+                   + milk_extra
+                   + flavor_extra)
+    print(f"\n{menu[drink_number]['name']} ({sizes[size_number]['name']}, {milk_name}, {flavor_name}): ${final_price:.2f}")
 
 def staff_sign_in():
     print("Staff sign-in coming soon.")

@@ -90,8 +90,19 @@ def place_order():
         print(f"{number}. {size['name']} (+${size['extra']:.2f})")
     size_number = get_valid_choice(sizes, "Choose a size: ")
 
-    final_price = menu[drink_number]["price"] + sizes[size_number]["extra"]
-    print(f"{menu[drink_number]['name']} ({sizes[size_number]['name']}): ${final_price:.2f}")
+    if menu[drink_number]["milkable"]:
+        print("\nMilk Options:")
+        for number, milk in milks.items():
+            print(f"{number}. {milk['name']} (+${milk['extra']:.2f})")
+        milk_number = get_valid_choice(milks, "Choose a milk: ")
+        milk_name = milks[milk_number]["name"]
+        milk_extra = milks[milk_number]["extra"]
+    else:
+        milk_name = "None"
+        milk_extra = 0.00
+
+    final_price = (menu[drink_number]["price"] + sizes[size_number]["extra"] + milk_extra)
+    print(f"\n{menu[drink_number]['name']} ({sizes[size_number]['name']}, {milk_name}): ${final_price:.2f}")
 
 def staff_sign_in():
     print("Staff sign-in coming soon.")

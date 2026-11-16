@@ -1,4 +1,6 @@
 import time
+from datetime import datetime
+
 menu = {
     # Hot Espresso Drinks
     1: {"category": "Hot Espresso Drinks", "name": "Latte", "price": 4.50, "flavorable": True, "milkable": True, "in_stock": True},
@@ -105,7 +107,7 @@ def show_menu():
     print("Flavors +$0.25. Oat/Almond milk +$0.25. Toppings +$0.25.")
 
 
-def place_order():
+def place_order(employee=None):
     show_menu()
     drink_number = get_valid_choice(menu, "\nEnter item number: ")
 
@@ -175,6 +177,13 @@ def place_order():
     print(f"Total:      ${final_price:.2f}")
 
     if get_yes_no("\nConfirm order? (y/n):  "):
+        if employee:
+            entered_by = employee["name"]
+            employee_id = employee["id"]
+        else:
+            entered_by = "Mobile customer"
+            employee_id = ("N/A")
+
         order = {
             "number": len(orders) + 1,
             "drink": menu[drink_number]["name"],
@@ -184,9 +193,13 @@ def place_order():
             "topping": topping_name,
             "pickup": pickup_time,
             "total": final_price,
+            "entered_by": entered_by,
+            "employee_id": employee_id,
+            "timestamp": datetime.now().strftime("%Y-%m-%d %I:%M %p"),
         }
         orders.append(order)
         print(f"\nOrder #{order['number']} placed! Pay in person at pick-up.")
+        print(f"Recorded: {entered_by}, ID {employee_id}, {order['timestamp']}")
     else:
         print("\nOrder cancelled.")
 
@@ -224,7 +237,7 @@ def staff_menu(employee):
         choice = input("Choose an option: ")
 
         if choice == "1":
-            place_order()
+            place_order(employee)
         elif choice == "2":
             print("Signed Out.")
             break

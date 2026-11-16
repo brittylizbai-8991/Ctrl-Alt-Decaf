@@ -1,3 +1,4 @@
+import time
 menu = {
     # Hot Espresso Drinks
     1: {"category": "Hot Espresso Drinks", "name": "Latte", "price": 4.50, "flavorable": True, "milkable": True, "in_stock": True},
@@ -72,6 +73,9 @@ employees = {
     "2143": {"id": 1002, "name": "Ryatt", "role": "barista"},
     "9187": {"id": 1003, "name": "Ryley", "role": "barista"},
 }
+# Tracks failed sign-in attempts and the lockout timer
+sign_in_state = {"failed": 0, "locked_until": 0}
+
 
 def get_valid_choice(options, prompt):
     while True:
@@ -188,14 +192,27 @@ def place_order():
 
 
 def staff_sign_in():
+    now = time.time()
+    if now < sign_in_state["locked_until"]:
+        seconds_left = int(sign_in_state["locked_until"] - now) + 1
+        print(f"Too many attempts. Try again in {seconds_left} seconds.")
+        return None
+
     pin = input("Enter your 4-digit PIN: ").strip()
 
     if pin in employees:
+        sign_in_state["failed"] = 0
         employee = employees[pin]
         print(f"\nWelcome, {employee['name']}!")
         return employee
 
-    print("Incorrect PIN. Please try again.")
+    sign_in_state["failed"] += 1
+    if sign_in_state["failed"] >= 3:
+        sign_in_state["locked_until"] = time.time() + 30
+        sign_in_state["failed"] = 0
+        print("Too many attempts. Try again in 30 seconds.")
+    else:
+        print("Incorrect PIN. Please try again.")
     return None
 
 def staff_menu(employee):

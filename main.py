@@ -54,6 +54,15 @@ toppings = {
     4: {"name": "Chocolate Drizzle", "extra": 0.25},
 }
 
+# Pick-up Time Slots
+pickup_times = {
+    1: "ASAP (about 10 minutes)",
+    2: "In 15 minutes",
+    3: "In 30 minutes",
+    4: "In 45 minutes",
+    5: "In 1 hour",
+}
+
 # Confirmed orders are stored here
 orders = []
 
@@ -133,6 +142,12 @@ def place_order():
         topping_name = "None"
         topping_extra = 0.00
 
+    print ("\nPick-up Times:")
+    for number, slot in pickup_times.items():
+        print(f"{number}. {slot}")
+    pickup_number = get_valid_choice(pickup_times, "Choose a pickup time: ")
+    pickup_time = pickup_times[pickup_number]
+
     final_price = (menu[drink_number]["price"]
                    + sizes[size_number]["extra"]
                    + milk_extra
@@ -140,12 +155,13 @@ def place_order():
                    + topping_extra)
 
     print("\n--- Order Summary ---")
-    print(f"Drink:   {menu[drink_number]['name']}")
-    print(f"Size:    {sizes[size_number]['name']}")
-    print(f"Milk:    {milk_name}")
-    print(f"Flavor:  {flavor_name}")
-    print(f"Topping: {topping_name}")
-    print(f"Total:   ${final_price:.2f}")
+    print(f"Drink:       {menu[drink_number]['name']}")
+    print(f"Size:        {sizes[size_number]['name']}")
+    print(f"Milk:        {milk_name}")
+    print(f"Flavor:      {flavor_name}")
+    print(f"Topping:     {topping_name}")
+    print(f"Pickup Time: {pickup_time}")
+    print(f"Total:      ${final_price:.2f}")
 
     if get_yes_no("\nConfirm order? (y/n):  "):
         order = {
@@ -155,6 +171,7 @@ def place_order():
             "milk": milk_name,
             "flavor": flavor_name,
             "topping": topping_name,
+            "pickup": pickup_time,
             "total": final_price,
         }
         orders.append(order)

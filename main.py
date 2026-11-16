@@ -66,6 +66,13 @@ pickup_times = {
 # Confirmed orders are stored here
 orders = []
 
+# Staff accounts, entered by PIN (demo PINS for the prototype)
+employees = {
+    "6889": {"id": 1001, "name": "Nicholas", "role": "barista"},
+    "2143": {"id": 1002, "name": "Ryatt", "role": "barista"},
+    "9187": {"id": 1003, "name": "Ryley", "role": "barista"},
+}
+
 def get_valid_choice(options, prompt):
     while True:
         raw = input(prompt).strip()
@@ -181,7 +188,31 @@ def place_order():
 
 
 def staff_sign_in():
-    print("Staff sign-in coming soon.")
+    pin = input("Enter your 4-digit PIN: ").strip()
+
+    if pin in employees:
+        employee = employees[pin]
+        print(f"\nWelcome, {employee['name']}!")
+        return employee
+
+    print("Incorrect PIN. Please try again.")
+    return None
+
+def staff_menu(employee):
+    while True:
+        print(f"\n--- Staff Menu ({employee['name']}) ---")
+        print("1. Take Order")
+        print("2. Sign Out")
+
+        choice = input("Choose an option: ")
+
+        if choice == "1":
+            place_order()
+        elif choice == "2":
+            print("Signed Out.")
+            break
+        else:
+            print("Invalid Selection. Please try again.")
 
 def main():
     while True:
@@ -195,7 +226,9 @@ def main():
         if choice == "1":
             place_order()
         elif choice == "2":
-            staff_sign_in()
+            employee = staff_sign_in()
+            if employee:
+                staff_menu(employee)
         elif choice == "3":
             print("Thank you, have a great day!")
             break

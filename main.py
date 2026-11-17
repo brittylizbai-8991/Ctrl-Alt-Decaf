@@ -51,7 +51,7 @@ milks = {
 
 # Toppings
 toppings = {
-    1: {"name": "No Toppings", "extra": 0.00},
+    1: {"name": "Done / No Toppings", "extra": 0.00},
     2: {"name": "Whipped Cream", "extra": 0.25},
     3: {"name": "Caramel Drizzle", "extra": 0.25},
     4: {"name": "Chocolate Drizzle", "extra": 0.25},
@@ -145,12 +145,28 @@ def place_order(employee=None):
         flavor_extra = 0.00
 
     if menu[drink_number]["milkable"]:
-        print("\nToppings:")
+        print("\nToppings  (add as many as you like, choose 1 when finished):")
         for number, topping in toppings.items():
             print(f"{number}. {topping['name']} (+${topping['extra']:.2f})")
-        topping_number = get_valid_choice(toppings, "Choose a topping: ")
-        topping_name = toppings[topping_number]["name"]
-        topping_extra = toppings[topping_number]["extra"]
+
+        chosen_toppings = []
+        topping_extra = 0.00
+
+        while True:
+            topping_number = get_valid_choice(toppings, "Add a topping (1 to finish): ")
+            if topping_number == 1:
+                break
+            name = toppings [topping_number]["name"]
+            if name in chosen_toppings:
+                print(f"{name}  is already added.")
+            else:
+                chosen_toppings.append(name)
+                topping_extra += toppings[topping_number]["extra"]
+                print(f"Added {name}.")
+        if chosen_toppings:
+            topping_name = ",  ".join(chosen_toppings)
+        else:
+            topping_name = "No Toppings"
     else:
         topping_name = "None"
         topping_extra = 0.00

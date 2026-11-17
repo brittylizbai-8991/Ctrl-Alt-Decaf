@@ -219,6 +219,21 @@ def show_queue():
     if not found:
         print("No pending orders.")
 
+def mark_order_done():
+    show_queue()
+
+    pending = {}
+    for order in orders:
+        if order["status"] == "Pending":
+            pending[order["number"]] = order
+
+    if not pending:
+        return
+
+    number = get_valid_choice(pending, "\nEnter order number to mark done: ")
+    pending[number] ["status"] = "Done"
+    print(f"Order #{number} marked done.")
+
 def staff_sign_in():
     now = time.time()
     if now < sign_in_state["locked_until"]:
@@ -248,7 +263,8 @@ def staff_menu(employee):
         print(f"\n--- Staff Menu ({employee['name']}) ---")
         print("1. Take Order")
         print("2. View Order Queue")
-        print("3. Sign Out")
+        print("3. Mark Order Done")
+        print("4. Sign Out")
 
         choice = input("Choose an option: ")
 
@@ -257,6 +273,8 @@ def staff_menu(employee):
         elif choice == "2":
             show_queue()
         elif choice == "3":
+            mark_order_done()
+        elif choice == "4":
             print("Signed Out.")
             break
         else:

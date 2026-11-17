@@ -250,6 +250,18 @@ def mark_order_done():
     pending[number] ["status"] = "Done"
     print(f"Order #{number} marked done.")
 
+def toggle_stock():
+    show_menu()
+    item_number = get_valid_choice(menu, "\nEnter item number to change: ")
+    item = menu[item_number]
+
+    if item ["in_stock"]:
+        item["in_stock"] = False
+        print(f"{item['name']} is now OUT OF STOCK.")
+    else:
+        item["in_stock"] = True
+        print(f"{item['name']} is BACK IN STOCK.")
+
 def staff_sign_in():
     now = time.time()
     if now < sign_in_state["locked_until"]:
@@ -280,7 +292,8 @@ def staff_menu(employee):
         print("1. Take Order")
         print("2. View Order Queue")
         print("3. Mark Order Done")
-        print("4. Sign Out")
+        print("4. Mark Item Out of Stock / Back in Stock")
+        print("5. Sign Out")
 
         choice = input("Choose an option: ")
 
@@ -291,6 +304,8 @@ def staff_menu(employee):
         elif choice == "3":
             mark_order_done()
         elif choice == "4":
+            toggle_stock()
+        elif choice == "5":
             print("Signed Out.")
             break
         else:

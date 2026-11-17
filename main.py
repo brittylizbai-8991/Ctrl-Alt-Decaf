@@ -69,6 +69,9 @@ pickup_times = {
 # Confirmed orders are stored here
 orders = []
 
+# Daily deals: item number --> percent off of the base price
+daily_deals = {}
+
 # Staff accounts, entered by PIN (demo PINS for the prototype)
 employees = {
     "6889": {"id": 1001, "name": "Nicholas", "role": "barista"},
@@ -94,6 +97,25 @@ def get_yes_no(prompt):
             return answer == "y"
         print("Please enter y or n.")
 
+def get_price(prompt):
+    while True:
+        raw = input(prompt).strip()
+        try:
+            value = float(raw)
+        except ValueError:
+            print("Please enter a number like 4.50.")
+            continue
+        if value > 0:
+            return round(value, 2)
+        print("Price must be more than 0.")
+
+def get_percent(prompt):
+    while True:
+        raw = input(prompt).strip()
+        if raw.isdigit() and 1 <= int(raw) <= 90:
+            return int(raw)
+        print("Please enter a whole number from 1 to 90.")
+
 def show_menu():
     last_category = ""
     for number, item in menu.items():
@@ -102,7 +124,10 @@ def show_menu():
             last_category = item["category"]
 
         status = "" if item["in_stock"] else " (OUT OF STOCK)"
-        print(f"{number}. {item['name']} - ${item['price']:.2f}{status}")
+        deal = ""
+        if number in daily_deals:
+            deal = f" (DAILY DEAL: {daily_deals [number]}% off)"
+        print(f"{number}. {item['name']} - ${item['price']:.2f}{status}{deal}")
 
     print("\nPrices shown are for Small. Medium +$0.75. Large +$1.00.")
     print("Flavors +$0.25. Oat/Almond milk +$0.25. Toppings +$0.25.")
@@ -178,7 +203,11 @@ def place_order(employee=None):
     pickup_number = get_valid_choice(pickup_times, "Choose a pickup time: ")
     pickup_time = pickup_times[pickup_number]
 
-    final_price = (menu[drink_number]["price"]
+    base_price = menu[drink_number]["price"]
+    if drink_number in daily_deals:
+        base_price = round(base_price * (100-daily_deals[drink_number]) / 100, 2)
+
+    final_price = (base_price
                    + sizes[size_number]["extra"]
                    + milk_extra
                    + flavor_extra
@@ -264,7 +293,35 @@ def toggle_stock():
         print(f"{item['name']} is BACK IN STOCK.")
 
 def update_menu_items():
-    print("Update menu items and daily deals: coming soon.")
+    while True:
+        print("\n--- Update Menu Items & Daily Deals ---")
+        print("1. Change an item's price")
+        print("2. Set a daily deal")
+        print("3. Clear all daily deals")
+        print("4. Back")
+
+        choice = input("Choose an option: ")
+
+        if choice == "1":
+            show_menu()
+            item_number = get_valid_choice(menu, "\nEnter item number: ")
+            old_price = menu[item_number]["price"]
+            new_price = get_price("Enter new Small price: $")
+            menu[item_number]["price"] = new_price
+            print(f"{menu[item_number]['name']} changed from ${old_price:.2f} to ${new_price:.2f}.")
+        elif choice == "2":
+            show_menu()
+            item_number = get_valid_choice(menu, "\nEnter item number for the deal: ")
+            percent = get_percent("Percent off (1 to 90): ")
+            daily_deals[item_number] = percent
+            print(f"Daily deal set: {menu[item_number]['name']} is {percent}% off.")
+        elif choice == "3":
+            daily_deals.clear()
+            print("All daily deals cleared.")
+        elif choice == "4":
+            break
+        else:
+            print("Invalid Selection. Please try again.")
 
 def manage_discounts_refunds(employee):
     print("Discounts and refunds: coming soon.")

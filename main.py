@@ -377,7 +377,29 @@ def manage_discounts_refunds(employee):
             print("Invalid Selection. Please try again.")
 
 def review_orders():
-    print("Review orders by employee: coming soon.")
+    print("\n--- Orders by Employee ---")
+
+    if not orders:
+        print("No orders yet.")
+        return
+
+    by_employee = {}
+    for order in orders:
+        key = f"{order['entered_by']}  (ID {order['employee_id']})"
+        if key not in by_employee:
+            by_employee[key] = []
+        by_employee[key].append(order)
+
+    for key, employee_orders in by_employee.items():
+        print(f"\n{key}: {len(employee_orders)} order(s)")
+        for order in employee_orders:
+            notes = ""
+            if "discount_percent" in order:
+                notes += f" | {order['discount_percent']}% discount by {order['discount_by']}"
+            if order ["status"] == "Refunded":
+                notes += f" | refunded by {order['refunded_by']}"
+            print(f"  #{order['number']}  {order['timestamp']}  {order['drink']}"
+                  f"({order['size']})  ${order['total']:.2f}  [{order['status']}]{notes}")
 
 def manager_menu(employee):
     while True:

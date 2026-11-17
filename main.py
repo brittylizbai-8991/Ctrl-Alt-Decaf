@@ -74,6 +74,7 @@ employees = {
     "6889": {"id": 1001, "name": "Nicholas", "role": "barista"},
     "2143": {"id": 1002, "name": "Ryatt", "role": "barista"},
     "9187": {"id": 1003, "name": "Ryley", "role": "barista"},
+    "1217": {"id": 2001, "name": "Brittany", "role": "manager"},
 }
 # Tracks failed sign-in attempts and the lockout timer
 sign_in_state = {"failed": 0, "locked_until": 0}
@@ -262,6 +263,35 @@ def toggle_stock():
         item["in_stock"] = True
         print(f"{item['name']} is BACK IN STOCK.")
 
+def update_menu_items():
+    print("Update menu items and daily deals: coming soon.")
+
+def manage_discounts_refunds(employee):
+    print("Discounts and refunds: coming soon.")
+
+def review_orders():
+    print("Review orders by employee: coming soon.")
+
+def manager_menu(employee):
+    while True:
+        print(f"\n--- Manager Tools ({employee['name']}) ---")
+        print("1. Update Menu Items & Daily Deals")
+        print("2. Discounts & Refunds")
+        print("3. Review Orders by Employee")
+        print("4. Back")
+
+        choice = input("Choose an option: ")
+        if choice == "1":
+            update_menu_items()
+        elif choice == "2":
+            manage_discounts_refunds(employee)
+        elif choice == "3":
+            review_orders()
+        elif choice == "4":
+            break
+        else:
+            print("Invalid Selection. Please try again.")
+
 def staff_sign_in():
     now = time.time()
     if now < sign_in_state["locked_until"]:
@@ -294,6 +324,8 @@ def staff_menu(employee):
         print("3. Mark Order Done")
         print("4. Mark Item Out of Stock / Back in Stock")
         print("5. Sign Out")
+        if employee["role"] == "manager":
+            print("6. Manager Tools")
 
         choice = input("Choose an option: ")
 
@@ -308,6 +340,10 @@ def staff_menu(employee):
         elif choice == "5":
             print("Signed Out.")
             break
+        elif choice == "6" and employee["role"] == "manager":
+            manager_menu(employee)
+        elif choice == "6":
+            print("Manager access only.")
         else:
             print("Invalid Selection. Please try again.")
 

@@ -323,8 +323,58 @@ def update_menu_items():
         else:
             print("Invalid Selection. Please try again.")
 
+def pick_order(allowed_statuses):
+    chosen = {}
+    for order in orders:
+        if order["status"] in allowed_statuses:
+            chosen[order["number"]] = order
+            print(f"#{order['number']}  {order['drink']} ({order['size']})  "
+                  f"${order['total']:.2f}  [{order['status']}]")
+
+    if not chosen:
+        print("No eligible orders.")
+        return None
+
+    number = get_valid_choice(chosen, "\nEnter order number: ")
+    return chosen[number]
+
 def manage_discounts_refunds(employee):
-    print("Discounts and refunds: coming soon.")
+    if employee["role"] != "manager":
+        print("Manager access only.")
+        return
+
+    while True:
+        print("\n--- Discounts & Refunds ---")
+        print("1. Apply a discount to an order")
+        print("2. Refund an order")
+        print("3. Back")
+
+        choice = input("Choose an option: ")
+
+        if choice == "1":
+            order = pick_order(("Pending", "Done"))
+            if order:
+                if "discount_percent" in order:
+                    print("That order already has a discount.")
+                else:
+                    percent = get_percent("Percent off (1 to 90): ")
+                    order["total"] = round(order["total"] * (100 - percent) / 100, 2)
+                    order["discount_percent"] = percent
+                    order["discount_by"] = employee["name"]
+                    print(f"Order #{order['number']} discounted {percent}%. New total: ${order['total']:.2f}")
+        elif choice == "2":
+            order = pick_order(("Pending", "Done"))
+            if order:
+                if get_yes_no(f"Refund ${order['total']:.2f} for order #{order['number']}? (y/n): "):
+                    order["status"] = "Refunded"
+                    order["refunded_by"] = employee["name"]
+                    print(f"Order #{order['number']} refunded.")
+                else:
+                    print("Refund cancelled.")
+        elif choice == "3":
+            break
+        else:
+            print("Invalid Selection. Please try again.")
 
 def review_orders():
     print("Review orders by employee: coming soon.")

@@ -196,13 +196,28 @@ def place_order(employee=None):
             "entered_by": entered_by,
             "employee_id": employee_id,
             "timestamp": datetime.now().strftime("%Y-%m-%d %I:%M %p"),
+            "status": "Pending",
         }
+
         orders.append(order)
         print(f"\nOrder #{order['number']} placed! Pay in person at pick-up.")
         print(f"Recorded: {entered_by}, ID {employee_id}, {order['timestamp']}")
     else:
         print("\nOrder cancelled.")
 
+def show_queue():
+    print("\n--- Order Queue ---")
+    found = False
+
+    for order in orders:
+        if order["status"] == "Pending":
+            print(f"\n#{order['number']}  {order['drink']} ({order['size']})")
+            print(f"    Milk: {order['milk']} | Flavor: {order['flavor']} | Topping: {order['topping']}")
+            print(f"    Pickup: {order['pickup']}")
+            found = True
+
+    if not found:
+        print("No pending orders.")
 
 def staff_sign_in():
     now = time.time()
@@ -232,13 +247,16 @@ def staff_menu(employee):
     while True:
         print(f"\n--- Staff Menu ({employee['name']}) ---")
         print("1. Take Order")
-        print("2. Sign Out")
+        print("2. View Order Queue")
+        print("3. Sign Out")
 
         choice = input("Choose an option: ")
 
         if choice == "1":
             place_order(employee)
         elif choice == "2":
+            show_queue()
+        elif choice == "3":
             print("Signed Out.")
             break
         else:
